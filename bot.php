@@ -46,7 +46,8 @@ $ws->on('ready', function ($discord) use ($ws) {
                 break;
             case 1:
                 $giphy = new \rfreebern\Giphy();
-                if ($result = $giphy->random($search)) {
+                $result = $giphy->random($search);
+                if ($result && !empty($result->data)) {
                     $image_url = $result->data->image_original_url;
                 }
                 break;
