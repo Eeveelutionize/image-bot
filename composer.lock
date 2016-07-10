@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4eadf24ff817c625b0b341e6b30ad8d5",
-    "content-hash": "8da687d4941ed53a9f096ada6e0f494e",
+    "hash": "da97a59d3482c938bba84ebdece38acf",
+    "content-hash": "d605401822bc88b58a9b3e84ceae9c95",
     "packages": [
         {
             "name": "TrafficCophp/ByteBuffer",
@@ -1585,6 +1585,46 @@
             "time": "2015-10-07 18:32:58"
         },
         {
+            "name": "rfreebern/giphy-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rfreebern/giphy-php.git",
+                "reference": "8a0dd7f03235c41ee2da57e9b931ffc9848174cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rfreebern/giphy-php/zipball/8a0dd7f03235c41ee2da57e9b931ffc9848174cb",
+                "reference": "8a0dd7f03235c41ee2da57e9b931ffc9848174cb",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "rfreebern": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC0"
+            ],
+            "authors": [
+                {
+                    "name": "Ryan Freebern",
+                    "email": "ryan@freebern.org"
+                }
+            ],
+            "description": "A library implementing access to the Giphy API.",
+            "keywords": [
+                "gif",
+                "gifs",
+                "giphy",
+                "images",
+                "search"
+            ],
+            "time": "2015-05-31 17:23:52"
+        },
+        {
             "name": "symfony/asset",
             "version": "v3.1.2",
             "source": {
@@ -3030,8 +3070,10 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "rfreebern/giphy-php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

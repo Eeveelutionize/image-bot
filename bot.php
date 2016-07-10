@@ -23,26 +23,40 @@ $ws->on('ready', function ($discord) use ($ws) {
         
         $search = str_replace($show_me_command, '', $message->content);
         
-        //Send a search
-        if (!$json = file_get_contents('http://imgur.com/search.json?q='.urlencode($search))) {
-            return;
-        }
-        
-        if (!$json = json_decode($json, true)) {
-            return;
-        }
-        
-        if (!isset($json['data']) || empty($json['data'])) {
-            $message->reply('Nothing there Sir.');
-            return;
-        }
+        $search_method = rand(0,1);
 
-        $rand_key = array_rand($json['data'], 1);
-        $image = $json['data'][$rand_key];
+        $image_url = false;
         
-        $image_url = 'http://imgur.com/' . $image['hash'] . $image['ext'];
+        switch ($search_method) {
+            case 0:
+                //Send a search
+                if (!$json = file_get_contents('http://imgur.com/search.json?q='.urlencode($search))) {
+                    break;
+                }
+
+                if (!$json = json_decode($json, true)) {
+                    break;
+                }
+
+                if (isset($json['data']) && !empty($json['data'])) {
+                    $rand_key = array_rand($json['data'], 1);
+                    $image = $json['data'][$rand_key];
+                    $image_url = 'http://imgur.com/' . $image['hash'] . $image['ext'];
+                }
+                break;
+            case 1:
+                $giphy = new \rfreebern\Giphy();
+                if ($result = $giphy->random($search)) {
+                    $image_url = $result->data->image_original_url;
+                }
+                break;
+        }
         
-        $message->reply('Sir, here is the image that you requested. ' . $image_url);
+        if (!$image_url) {
+            $message->reply('No image to be found, Sir.');
+        } else {
+            $message->reply('Sir, here is the image that you requested. ' . $image_url);
+        }
     });
 });
 
