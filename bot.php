@@ -12,13 +12,12 @@ $ws      = new WebSocket($discord);
 
 $ws->on('ready', function ($discord) use ($ws) {
     echo "Bot is ready!".PHP_EOL;
+    $requests = [];
 
     // We will listen for messages
-    $ws->on('message', function ($message, $discord) {
+    $ws->on('message', function ($message, $discord) use (&$requests) {
         $rate_limit = 3;
         $rate_limit_length = 5*60;
-
-        $requests = [];
         
         $show_me_command = '\\show-me ';
         if (0 !== stripos($message->content, '\\show-me ')) {
@@ -46,7 +45,7 @@ $ws->on('ready', function ($discord) use ($ws) {
         //Now replace the original array
         $requests = $new_array;
         
-        if (array_sum($requests) >= $rate_limit) {
+        if (array_sum($requests) > $rate_limit) {
             $message->reply('Sorry, I can\'t do that, Sir.');
             return;
         }
