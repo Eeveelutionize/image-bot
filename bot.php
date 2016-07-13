@@ -15,7 +15,7 @@ $ws->on('ready', function ($discord) use ($ws) {
 
     // We will listen for messages
     $ws->on('message', function ($message, $discord) {
-        $rate_limit = 5;
+        $rate_limit = 3;
         $rate_limit_length = 5*60;
 
         $requests = [];
