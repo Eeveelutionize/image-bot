@@ -15,9 +15,39 @@ $ws->on('ready', function ($discord) use ($ws) {
 
     // We will listen for messages
     $ws->on('message', function ($message, $discord) {
+        $rate_limit = 5;
+        $rate_limit_length = 5*60;
+
+        $requests = [];
+        
         $show_me_command = '\\show-me ';
         if (0 !== stripos($message->content, '\\show-me ')) {
             //We have nothing to do here
+            return;
+        }
+        
+        $time = time();
+        
+        if (!isset($requests[$time])) {
+            $requests[$time] = 0;
+        }
+        
+        //increase the number of requests
+        $requests[$time]++;
+
+        //Create a new array removing times outside of limit length.
+        $new_array = array();
+        array_walk($requests, function($val, $key) use (&$new_array, $time, $rate_limit_length) {
+            if ($key >= ($time-$rate_limit_length)) {
+                $new_array[$key] = $val;
+            }
+        });
+        
+        //Now replace the original array
+        $requests = $new_array;
+        
+        if (array_sum($requests) >= $rate_limit) {
+            $message->reply('Sorry, I can\'t do that, Sir.');
             return;
         }
         
