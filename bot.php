@@ -18,6 +18,7 @@ $ws->on('ready', function ($discord) use ($ws) {
     $ws->on('message', function ($message, $discord) use (&$requests) {
         if (1 === rand(1,420)) {
             $message->reply('same');
+            return;
         }
 
         $rate_limit = 3;
@@ -31,25 +32,26 @@ $ws->on('ready', function ($discord) use ($ws) {
         
         $time = time();
         
-        if (!isset($requests[$time])) {
-            $requests[$time] = 0;
+        $key = $message->author->username;
+        if (!isset($requests[$key][$time])) {
+            $requests[$key][$time] = 0;
         }
         
         //increase the number of requests
-        $requests[$time]++;
+        $requests[$key][$time]++;
 
         //Create a new array removing times outside of limit length.
         $new_array = array();
-        array_walk($requests, function($val, $key) use (&$new_array, $time, $rate_limit_length) {
+        array_walk($requests[$key], function($val, $key) use (&$new_array, $time, $rate_limit_length) {
             if ($key >= ($time-$rate_limit_length)) {
                 $new_array[$key] = $val;
             }
         });
         
         //Now replace the original array
-        $requests = $new_array;
+        $requests[$key] = $new_array;
         
-        if (array_sum($requests) > $rate_limit) {
+        if (array_sum($requests[$key]) > $rate_limit) {
             $message->reply('Sorry, I can\'t do that, Sir.');
             return;
         }
