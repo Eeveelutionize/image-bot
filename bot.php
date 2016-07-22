@@ -11,11 +11,15 @@ $discord = new Discord($BOT_TOKEN);
 $ws      = new WebSocket($discord);
 
 $ws->on('ready', function ($discord) use ($ws) {
-    echo "Bot is ready!".PHP_EOL;
+    echo date("Y-m-d H:i:s") . " -- Bot is ready!".PHP_EOL;
     $requests = [];
 
     // We will listen for messages
     $ws->on('message', function ($message, $discord) use (&$requests) {
+        if (1 === rand(1,420)) {
+            $message->reply('same');
+        }
+
         $rate_limit = 3;
         $rate_limit_length = 5*60;
         
@@ -55,6 +59,11 @@ $ws->on('ready', function ($discord) use ($ws) {
         $search_method = rand(0,1);
 
         $image_url = false;
+
+        if ('nsfw' == $search) {
+            $message->reply('no');
+            return;
+        }
         
         switch ($search_method) {
             case 0:
@@ -90,4 +99,15 @@ $ws->on('ready', function ($discord) use ($ws) {
     });
 });
 
+$ws->on(
+    'error',
+    function ($error, $ws) {
+        dump($error);
+        exit(1);
+    }
+);
+
 $ws->run();
+
+exit(1); //always trigger a demon restart
+
