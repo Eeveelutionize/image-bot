@@ -2,6 +2,7 @@
     "minimum-stability": "dev",
     "require": {
         "team-reflex/discord-php": "^3.2",
-        "rfreebern/giphy-php": "dev-master"
+        "rfreebern/giphy-php": "dev-master",
+        "jwhennessey/phpinsight": "^2.0"
     }
 }

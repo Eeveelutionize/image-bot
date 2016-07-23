@@ -53,20 +53,12 @@ function rateLimit(Message $message, &$requests) {
     return false;
 }
 
-function showMe(Message $message) {
-    $show_me_command = '\\show-me ';
-    if (0 !== stripos($message->content, '\\show-me ')) {
-        //We have nothing to do here
-        return false;
-    }
-
-    $search = str_replace($show_me_command, '', $message->content);
-
+function showMe(Message $message, $query) {
     $search_method = rand(0,1);
 
     $image_url = false;
 
-    if (false !== stripos($search, 'nsfw')) {
+    if (false !== stripos($query, 'nsfw')) {
         $message->reply('no');
         return true;
     }
@@ -74,7 +66,7 @@ function showMe(Message $message) {
     switch ($search_method) {
         case 0:
             //Send a search
-            if (!$json = file_get_contents('http://imgur.com/search.json?q='.urlencode($search))) {
+            if (!$json = file_get_contents('http://imgur.com/search.json?q='.urlencode($query))) {
                 break;
             }
 
@@ -90,7 +82,7 @@ function showMe(Message $message) {
             break;
         case 1:
             $giphy = new \rfreebern\Giphy();
-            $result = $giphy->random($search);
+            $result = $giphy->random($query);
             if ($result && !empty($result->data)) {
                 $image_url = $result->data->image_original_url;
             }
@@ -106,26 +98,74 @@ function showMe(Message $message) {
     return true;
 }
 
+function sentiment(Message $message, $query) {
+    $sentiment = new \PHPInsight\Sentiment();
+
+    $category = $sentiment->categorise($query);
+    $score = $sentiment->score($query);
+
+    $reply = 'I am ' . $score[(string)$category]*100 . '% sure that "'.$query.'" is ';
+
+    switch ($category) {
+        case 'neg':
+            $reply .= 'salty';
+            break;
+        case 'neu':
+            $reply .= '¯\_(ツ)_/¯';
+            break;
+        case 'pos':
+            $reply .= 'dank';
+            break;
+    }
+
+    $reply .= '.';
+
+    $message->reply($reply);
+
+    return true;
+}
+
 $ws->on('ready', function ($discord) use ($ws) {
     echo date("Y-m-d H:i:s") . " -- Bot is ready!".PHP_EOL;
 
     $requests = [];
+    $lastMessage = null;
     // We will listen for messages
-    $ws->on('message', function ($message, $discord) use (&$requests) {
+    $ws->on('message', function ($message, $discord) use (&$requests, &$lastMessage) {
         /**
          * @var \Discord\Parts\Channel\Message $message
          */
         if (same($message)) {
+            $lastMessage = $message;
             return;
         }
 
-        if (rateLimit($message, $requests)) {
-            return;
+        $commands = [
+            '\\show-me' => 'showMe',
+            '\\sentiment' => 'sentiment'
+        ];
+
+        $parts = explode(' ', $message->content);
+        $command = $parts[0];
+
+        if (isset($commands[$command])) {
+            //This is a command for this bot.
+            if (rateLimit($message, $requests)) {
+                $lastMessage = $message;
+                return;
+            }
+
+            //Execute the command
+            $query = str_replace($command.' ', '', $message->content);
+            $query = trim($query);
+            if (empty($query) && $lastMessage) {
+                //Default to the last message content
+                $query = $lastMessage->content;
+            }
+            $commands[$command]($message, $query);
         }
 
-        if (showMe($message)) {
-            return;
-        }
+        $lastMessage = $message;
     });
 });
 

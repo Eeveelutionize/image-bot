@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "da97a59d3482c938bba84ebdece38acf",
-    "content-hash": "d605401822bc88b58a9b3e84ceae9c95",
+    "hash": "e7094def76ee69f1d05106ca991551c0",
+    "content-hash": "875669ebf4df0e17d67256cc5cb4f7f3",
     "packages": [
         {
             "name": "TrafficCophp/ByteBuffer",
@@ -99,7 +99,7 @@
                 {
                     "name": "Tobias Nyholm",
                     "email": "tobias.nyholm@gmail.com",
-                    "homepage": "https://github.com/nyholm"
+                    "homepage": "https://github.com/Nyholm"
                 }
             ],
             "description": "A bundle that registers cache implementations as Symfony services supporting PSR-6 and tagging",
@@ -913,6 +913,47 @@
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
             "time": "2016-02-22 20:29:02"
+        },
+        {
+            "name": "jwhennessey/phpinsight",
+            "version": "v2.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JWHennessey/phpInsight.git",
+                "reference": "b89e7a7f418ebd88ae330b889be4dd1d47d4ceaa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JWHennessey/phpInsight/zipball/b89e7a7f418ebd88ae330b889be4dd1d47d4ceaa",
+                "reference": "b89e7a7f418ebd88ae330b889be4dd1d47d4ceaa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPInsight": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPLv3 or later"
+            ],
+            "authors": [
+                {
+                    "name": "James Hennessey"
+                }
+            ],
+            "description": "Sentiment analysis tool for PHP",
+            "homepage": "https://github.com/JWHennessey/phpInsight",
+            "keywords": [
+                "insight",
+                "phpinsight",
+                "sentiment"
+            ],
+            "time": "2015-06-20 03:38:20"
         },
         {
             "name": "nesbot/carbon",
