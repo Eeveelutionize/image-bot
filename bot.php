@@ -158,12 +158,15 @@ $ws->on('ready', function ($discord) use ($ws) {
             //Execute the command
             $query = str_replace($command.' ', '', $message->content);
             $query = trim($query);
-            if ($query == $command && $lastMessage[$message->full_channel->id]) {
-                //Default to the last message content
-                $query = $lastMessage[$message->full_channel->id]->content;
-            } else {
-                $message->reply('does not compute');
-                return;
+            if ($query == $command) {
+                if (isset($lastMessage[$message->full_channel->id])) {
+                    //Default to the last message content
+                    $query = $lastMessage[$message->full_channel->id]->content;
+                } else {
+                    //Nothing to default to
+                    $message->reply('does not compute');
+                    return;
+                }
             }
             $commands[$command]($message, $query);
         }
