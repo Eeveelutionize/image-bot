@@ -129,14 +129,14 @@ $ws->on('ready', function ($discord) use ($ws) {
     echo date("Y-m-d H:i:s") . " -- Bot is ready!".PHP_EOL;
 
     $requests = [];
-    $lastMessage = null;
+    $lastMessage = array();
     // We will listen for messages
     $ws->on('message', function ($message, $discord) use (&$requests, &$lastMessage) {
         /**
          * @var \Discord\Parts\Channel\Message $message
          */
         if (same($message)) {
-            $lastMessage = $message;
+            $lastMessage[$message->full_channel->id] = $message;
             return;
         }
 
@@ -151,21 +151,24 @@ $ws->on('ready', function ($discord) use ($ws) {
         if (isset($commands[$command])) {
             //This is a command for this bot.
             if (rateLimit($message, $requests)) {
-                $lastMessage = $message;
+                $lastMessage[$message->full_channel->id] = $message;
                 return;
             }
 
             //Execute the command
             $query = str_replace($command.' ', '', $message->content);
             $query = trim($query);
-            if (empty($query) && $lastMessage) {
+            if ($query == $command && $lastMessage[$message->full_channel->id]) {
                 //Default to the last message content
-                $query = $lastMessage->content;
+                $query = $lastMessage[$message->full_channel->id]->content;
+            } else {
+                $message->reply('does not compute');
+                return;
             }
             $commands[$command]($message, $query);
         }
 
-        $lastMessage = $message;
+        $lastMessage[$message->full_channel->id] = $message;
     });
 });
 
