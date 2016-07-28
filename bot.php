@@ -178,7 +178,7 @@ $ws->on('ready', function ($discord) use ($ws) {
 $ws->on(
     'error',
     function ($error, $ws) {
-        print_r($error);
+        echo 'error' . PHP_EOL;
         exit(1);
     }
 );
