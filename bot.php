@@ -125,7 +125,34 @@ function sentiment(Message $message, $query) {
     return true;
 }
 
-$ws->on('ready', function ($discord) use ($ws) {
+function knifeFight(Message $message, $query)
+{
+    $participants = [];
+
+    foreach ($message->mentions as $user) {
+        $participants[] = '@'.$user->id;
+    };
+
+    //The instigator always participates
+    $participants[] = '@'.$message->author->id;
+
+    $participants = array_unique($participants);
+
+    if (count($participants) < 2) {
+        $message->reply('it takes two to tango, silly');
+        return true;
+    }
+
+    shuffle($participants);
+
+    $winner = $participants[0];
+
+    $message->reply('The winner is... <'.$winner.'>');
+
+    return true;
+}
+
+$ws->on('ready', function (Discord $discord) use ($ws) {
     echo date("Y-m-d H:i:s") . " -- Bot is ready!".PHP_EOL;
 
     $requests = [];
@@ -142,7 +169,8 @@ $ws->on('ready', function ($discord) use ($ws) {
 
         $commands = [
             '\\show-me' => 'showMe',
-            '\\sentiment' => 'sentiment'
+            '\\sentiment' => 'sentiment',
+            '\\knife-fight' => 'knifeFight',
         ];
 
         $parts = explode(' ', $message->content);
