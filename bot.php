@@ -147,7 +147,7 @@ function knifeFight(Message $message, $query)
 
     $winner = $participants[0];
 
-    $message->reply('The winner is... <'.$winner.'>');
+    $message->reply('The winner is... :knife: :knife: :knife: ... <'.$winner.'>');
 
     return true;
 }
