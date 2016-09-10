@@ -5,11 +5,11 @@ require_once __DIR__.'/config.inc.php';
 include __DIR__.'/vendor/autoload.php';
 
 use Discord\Discord;
-use Discord\WebSockets\WebSocket;
 use \Discord\Parts\Channel\Message;
 
-$discord = new Discord($BOT_TOKEN);
-$ws      = new WebSocket($discord);
+$discord = new Discord([
+    'token' => $BOT_TOKEN,
+]);
 
 function same(Message $message) {
     if (420 === rand(1,420)) {
@@ -152,13 +152,13 @@ function knifeFight(Message $message, $query)
     return true;
 }
 
-$ws->on('ready', function (Discord $discord) use ($ws) {
+$discord->on('ready', function (Discord $discord) use ($discord) {
     echo date("Y-m-d H:i:s") . " -- Bot is ready!".PHP_EOL;
 
     $requests = [];
     $lastMessage = array();
     // We will listen for messages
-    $ws->on('message', function ($message, $discord) use (&$requests, &$lastMessage) {
+    $discord->on('message', function ($message, $discord) use (&$requests, &$lastMessage) {
         /**
          * @var \Discord\Parts\Channel\Message $message
          */
@@ -203,15 +203,15 @@ $ws->on('ready', function (Discord $discord) use ($ws) {
     });
 });
 
-$ws->on(
+$discord->on(
     'error',
-    function ($error, $ws) {
+    function ($error, $discord) {
         echo 'error' . PHP_EOL;
         exit(1);
     }
 );
 
-$ws->run();
+$discord->run();
 
 exit(1); //always trigger a demon restart
 
